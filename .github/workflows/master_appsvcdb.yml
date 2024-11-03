@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          
       - name: Restore dependencies
         run: dotnet restore
 
@@ -43,7 +44,7 @@ jobs:
       - name: Generate EF Core Migration Script
         run: dotnet ef migrations script --idempotent --no-build --configuration Release --output ${{env.DOTNET_ROOT}}/sql/sql-script.sql --context DeploymentAppWithDb.Data.ProjectContext --project ${{ github.workspace }}/DeploymentAppWithDb/DeploymentAppWithDb.csproj
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ddl-updates
           path: ${{env.DOTNET_ROOT}}/sql/sql-script.sql
@@ -62,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
       
       - name: Login to Azure
-        uses: azure/login@v2
+        uses: azure/login@v4
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4055913D3C794A58BD44EBEC77705ABC }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_39E68DA4DC52453A868C02E6EF44F263 }}
@@ -78,7 +79,7 @@ jobs:
 
           
       - name: Azure SQL Deploy
-        uses: Azure/sql-action@v2
+        uses: Azure/sql-action@v4
         with:
           # The connection string, including authentication information, for the Azure SQL Server database.
           connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
